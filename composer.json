@@ -1,0 +1,12 @@
+{
+  "name" : "rgen3/yii2-blog",
+  "description" : "Simple blog for yii2",
+  "authors" : [
+    {
+      "name" : "Alexander Tanaev",
+      "email": "rgen3@mail.ru",
+      "role" : "Developer"
+    }
+  ],
+  "minimum-stability" : "dev"
+}

@@ -52,6 +52,18 @@ class BlogRecord extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getTranslation($lang)
+    {
+        $model = BlogRecordTranslation::findOne(['record_id' => $this->id, 'language_code' => $lang]);
+
+        if (!$model)
+        {
+            $model = new BlogRecordTranslation();
+        }
+
+        return $model;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -60,20 +72,19 @@ class BlogRecord extends \yii\db\ActiveRecord
         return $this->hasMany(BlogRecordToCategory::className(), ['record_id' => 'id']);
     }
 
+    public function getCategories()
+    {
+        return $this->hasMany(
+            BlogCategoryTranslation::className(),
+            [ 'record_id' => 'id']
+        )->viaTable('{{%blog_record_to_category}}', ['category_id' => 'id'])->where(['like', 'language_code', Yii::$app->language]);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getBlogRecordTranslations()
     {
         return $this->hasMany(BlogRecordTranslation::className(), ['record_id' => 'id']);
-    }
-
-    /**
-     * @inheritdoc
-     * @return BlogCategoryTranslationQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new BlogCategoryTranslationQuery(get_called_class());
     }
 }

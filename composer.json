@@ -8,6 +8,38 @@
       "role" : "Developer"
     }
   ],
+  "repositories" : [
+    {
+      "type": "package",
+      "package": {
+        "name": "rgen3/yii2-filemanager",
+        "version": "dev-master",
+        "minimum-stability": "dev",
+        "prefer-stable" : true,
+        "source": {
+          "url": "https://github.com/rgen3/yii2-filemanager.git",
+          "type": "git",
+          "reference": "master"
+        },
+        "require": {
+          "yiisoft/yii2": "*",
+          "yiisoft/yii2-imagine": "*",
+          "pendalf89/yii2-tinymce": "*",
+          "kartik-v/yii2-widget-alert": "*",
+          "kartik-v/yii2-widget-select2": "*",
+          "2amigos/yii2-file-upload-widget": "*"
+        },
+        "autoload": {
+          "psr-4" : {
+            "pendalf89\\filemanager\\" : ""
+          }
+        }
+      }
+    }
+  ],
+  "require" : {
+    "rgen3/yii2-filemanager": "@dev"
+  },
   "minimum-stability" : "dev",
   "autoload": {
     "psr-4" : {

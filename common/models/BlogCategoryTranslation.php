@@ -60,13 +60,4 @@ class BlogCategoryTranslation extends \yii\db\ActiveRecord
     {
         return $this->hasOne(BlogCategory::className(), ['id' => 'category_id']);
     }
-
-    /**
-     * @inheritdoc
-     * @return BlogCategoryTranslationQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new BlogCategoryTranslationQuery(get_called_class());
-    }
 }

@@ -8,7 +8,19 @@ use rgen3\blog\backend\Module as M;
 <?php $form = ActiveForm::begin(); ?>
 
 <?= $form->field($model, 'slug'); ?>
-<?= (var_dump($model->categories)); ?>
+
+<?php $categoryList = $categories->parentList; ?>
+
+<?= $form->field($model, 'categories')
+    ->widget(\kartik\select2\Select2::class,
+        [
+            'data' => $categoryList,
+            'options' => [
+                'placeholder' => M::t('admin', 'Select blog categories'),
+                'multiple' => true,
+                'value' => $model->getSelectedCategories()
+            ],
+        ]); ?>
 
 <?php $items = []; ?>
 
@@ -25,7 +37,23 @@ use rgen3\blog\backend\Module as M;
             'buttonOptions' => ['class' => 'btn btn-default'],
             'options' => ['class' => 'form-control'],
         ]); ?>
+
     <?php $content .= $form->field($translationModel, "[{$lang}]preview")
+        ->label(M::t('admin', "Description") . " {$lang}")
+        ->widget(\pendalf89\tinymce\TinyMce::className(), [
+            'clientOptions' => [
+                'language' => 'ru',
+                'menubar' => false,
+                'height' => 200,
+                'image_dimensions' => false,
+                'plugins' => [
+                    'advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code contextmenu table',
+                ],
+                'toolbar' => 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | code',
+            ],
+        ]); ?>
+
+    <?php $content .= $form->field($translationModel, "[{$lang}]body")
         ->label(M::t('admin', "Description") . " {$lang}")
         ->widget(\pendalf89\tinymce\TinyMce::className(), [
             'clientOptions' => [

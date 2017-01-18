@@ -5,6 +5,7 @@ namespace rgen3\blog\backend\controllers;
 use rgen3\blog\common\models\BlogCategory;
 use rgen3\blog\common\models\BlogRecord;
 use rgen3\blog\common\models\BlogRecordSearch;
+use rgen3\blog\common\models\BlogRecordTranslation;
 use yii\web\Controller;
 
 class RecordController extends Controller
@@ -24,18 +25,64 @@ class RecordController extends Controller
     {
         $model = new BlogRecord();
 
-        if ($model->load(\Yii::$app->request->post()))
+        $postData = \Yii::$app->request->post();
+
+        if ($model->load($postData))
         {
+            foreach (\Yii::$app->params['availableLanguages'] as $language)
+            {
+                $modelTranslation = new BlogRecordTranslation();
+                $modelTranslation->setAttributes($postData['BlogRecordTranslation'][$language]);
+                $model->translationModels[$language] = $modelTranslation;
+            }
+
+            $model->save();
+            $model->saveCategories();
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
+            'model' => $model,
+            'categories' => new BlogCategory()
+        ]);
+    }
+
+    public function actionView($id)
+    {
+        $model = BlogRecord::findOne(['id' => $id]);
+
+        return $this->render('view', [
             'model' => $model
         ]);
     }
 
-    public function actionUpdate()
-    {}
+    public function actionUpdate($id)
+    {
+        $model = BlogRecord::findOne(['id' => $id]);
+
+        $postData = \Yii::$app->request->post();
+
+        if ($model->load($postData))
+        {
+            foreach (\Yii::$app->params['availableLanguages'] as $language)
+            {
+                $modelTranslation = BlogRecordTranslation::findOne(['language_code' => $language, 'record_id' => $model->id]);
+                $modelTranslation->setAttributes($postData['BlogRecordTranslation'][$language]);
+                $model->translationModels[$language] = $modelTranslation;
+            }
+
+            $model->save();
+            $model->saveCategories();
+
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+            'categories' => new BlogCategory()
+        ]);
+    }
 
     public function actionDelete()
     {}

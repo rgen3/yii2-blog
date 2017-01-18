@@ -3,6 +3,7 @@
 namespace rgen3\blog\common\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%blog_category}}".
@@ -82,9 +83,21 @@ class BlogCategory extends \yii\db\ActiveRecord
         return $model;
     }
 
-    public function getTranslation($lang)
+    public function getTranslation($lang = null, $initiate = false)
     {
-        return BlogCategoryTranslation::findOne(['category_id' => $this->id, 'language_code' => $lang]);
+        if ($lang === null)
+        {
+            $lang = Yii::$app->language;
+        }
+
+        $modelTranslation = BlogCategoryTranslation::findOne(['category_id' => $this->id, 'language_code' => $lang]);
+
+        if (!$modelTranslation && $initiate)
+        {
+            $modelTranslation = new BlogCategoryTranslation();
+        }
+
+        return $modelTranslation;
     }
 
     /**
@@ -109,5 +122,52 @@ class BlogCategory extends \yii\db\ActiveRecord
     public function getBlogRecordToCategories()
     {
         return $this->hasMany(BlogRecordToCategory::className(), ['record_id' => 'id']);
+    }
+
+    public function getParentList()
+    {
+        $query = BlogCategory::find();
+
+        if ($this->id)
+        {
+            $query->where(['!=', 'id', $this->id]);
+        }
+
+        $result = array_map(function($el){
+            $title = $this->recursiveTitleConstructor($el);
+
+            return [
+                'id' => $el->id,
+                'title' => sprintf("%s ( %s )", $title, $el->slug)
+            ];
+        }, $query->all());
+
+        return ArrayHelper::map($result, 'id', 'title');
+    }
+
+    public function getParentIdsRecursive($model = null)
+    {
+        $model = $model ? $model : $this;
+        $result = [$model->id];
+
+        if ($parentModel = $model->parent)
+        {
+            $result = array_merge($result, $this->getParentIdsRecursive($parentModel));
+        }
+
+        return $result;
+    }
+
+    private function recursiveTitleConstructor($model)
+    {
+        $title = '';
+
+        if ($model->parent)
+        {
+            $title = $this->recursiveTitleConstructor($model->parent);
+            $title = sprintf("%s (%s) -> ", $title, $model->parent->slug);
+        }
+
+        return sprintf("%s %s", $title, $model->getTranslation()->title);
     }
 }

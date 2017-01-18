@@ -32,7 +32,7 @@ class CategoryController extends Controller
             {
                 $modelTranslation = new BlogCategoryTranslation();
                 $modelTranslation->setAttributes($postData['BlogCategoryTranslation'][$language]);
-                $this->translationModels[$language] = $modelTranslation;
+                $model->translationModels[$language] = $modelTranslation;
             }
 
             $model->save();

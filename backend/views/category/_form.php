@@ -3,18 +3,20 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use rgen3\blog\backend\Module as M;
+use rgen3\blog\common\models\BlogCategory;
+use yii\helpers\ArrayHelper;
 ?>
 
 <?php $form = ActiveForm::begin(); ?>
 
 <?= $form->field($model, 'slug'); ?>
 
-<?= $form->field($model, 'parent_id')->dropDownList([]); ?>
+<?= $form->field($model, 'parent_id')->dropDownList($model->getParentList()); ?>
 
 <?php $items = []; ?>
 <?php foreach (Yii::$app->params['availableLanguages'] as $lang) : ?>
 
-    <?php $translationModel = $model->getTranslation($lang); ?>
+    <?php $translationModel = $model->getTranslation($lang, true); ?>
     <?php $content = $form->field($translationModel, "[{$lang}]title")->label(M::t('admin', "Title") . " {$lang}"); ?>
     <?php $content .= $form->field($translationModel, "[{$lang}]image")
         ->label(M::t('admin', 'Image' . " {$lang}"))

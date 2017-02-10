@@ -6,11 +6,44 @@ use yii\data\ActiveDataProvider;
 
 class BlogRecordSearch extends BlogRecord
 {
+    protected $limit = 10;
+    protected $page = null;
+    /**
+     * 'limit' => $this->limit,
+    'offset' => $this->offset,
+    'category' => $this->prepareCategory(),
+    'sort'
+     */
+    /**
+     * @param array $params
+     * (
+     * @type int $limit
+     * @type int $offset
+     * @type array $category
+     * @type array $sort
+     * )
+     * @return ActiveDataProvider
+     */
     public function search($params)
     {
         $query = BlogRecord::find();
+
+        if (isset($params['limit']))
+        {
+            $this->limit = $params['limit'];
+        }
+
+        if (isset($params['page']))
+        {
+            $this->page = $params['page'];
+        }
+
         $dataProvider = new ActiveDataProvider([
-            'query' => $query
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => $this->limit,
+                'page' => $this->page
+            ]
         ]);
 
         $this->load($params);
@@ -24,6 +57,8 @@ class BlogRecordSearch extends BlogRecord
         $query->filterWhere([
             'id' => $this->id
         ]);
+
+
 
         return $dataProvider;
     }

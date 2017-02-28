@@ -13,7 +13,7 @@ class RecordList extends Widget
     public $limit = 10;
     public $offset = 0;
     public $category = null;
-    public $sort = [];
+    public $orderBy = [];
 
     public $title = 'News';
 
@@ -30,7 +30,7 @@ class RecordList extends Widget
             'limit' => $this->limit,
             'offset' => $this->offset,
             'category' => $this->prepareCategory(),
-            'sort'      => $this->prepareSort()
+            'orderBy'      => $this->prepareSort()
         ]);
         return $this->render($this->getTemplate(), [
             'dataProvider' => $dataProvider,
@@ -68,7 +68,9 @@ class RecordList extends Widget
 
     private function prepareSort()
     {
-        if (!is_array($this->sort))
+        if (!is_array($this->orderBy))
             throw new \InvalidArgumentException();
+
+        return $this->orderBy;
     }
 }

@@ -46,6 +46,11 @@ class BlogRecordSearch extends BlogRecord
             ]
         ]);
 
+        if (isset($params['orderBy']))
+        {
+            $query->orderBy($params['orderBy']);
+        }
+
         $this->load($params);
 
         if (!$this->validate())

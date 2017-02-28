@@ -67,7 +67,7 @@ class RecordController extends Controller
         {
             foreach (\Yii::$app->params['availableLanguages'] as $language)
             {
-                $modelTranslation = BlogRecordTranslation::findOne(['language_code' => $language, 'record_id' => $model->id]);
+                $modelTranslation = $model->getTranslation($language);
                 $modelTranslation->setAttributes($postData['BlogRecordTranslation'][$language]);
                 $model->translationModels[$language] = $modelTranslation;
             }
@@ -84,6 +84,12 @@ class RecordController extends Controller
         ]);
     }
 
-    public function actionDelete()
-    {}
+    public function actionDelete($id)
+    {
+        $record = BlogRecord::findOne(['id' => $id]);
+
+        $record &&  $record->remove();
+
+        return $this->redirect(['index']);
+    }
 }

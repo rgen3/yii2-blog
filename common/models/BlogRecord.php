@@ -45,6 +45,8 @@ class BlogRecord extends \yii\db\ActiveRecord
             BlogRecordToCategory::findAll(['record_id' => $this->id])
         );
 
+
+        if ($this->categories)
         foreach ($this->categories as $category)
         {
             $bnd = new BlogRecordToCategory();
@@ -134,5 +136,18 @@ class BlogRecord extends \yii\db\ActiveRecord
     public function getBlogRecordTranslations()
     {
         return $this->hasMany(BlogRecordTranslation::className(), ['record_id' => 'id']);
+    }
+
+    /**
+     * @return false|int
+     */
+    public function remove()
+    {
+        foreach (BlogRecordTranslation::findAll(['record_id' => $this->id]) as $model)
+        {
+            $model && $model->delete();
+        }
+
+        return $this->delete();
     }
 }

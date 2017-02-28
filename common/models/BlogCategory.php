@@ -2,6 +2,7 @@
 
 namespace rgen3\blog\common\models;
 
+use rgen3\blog\backend\Module;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -142,6 +143,13 @@ class BlogCategory extends \yii\db\ActiveRecord
             ];
         }, $query->all());
 
+        $result = ArrayHelper::merge(
+            [[
+                'id' => null,
+                'title' => Module::t('admin', 'Top level category')
+            ]],
+            $result
+        );
         return ArrayHelper::map($result, 'id', 'title');
     }
 

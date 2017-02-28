@@ -7,7 +7,13 @@ use rgen3\blog\common\models\BlogCategory;
 use yii\helpers\ArrayHelper;
 ?>
 
-<?php $form = ActiveForm::begin(); ?>
+<?php $form = ActiveForm::begin([
+    'method' => 'post',
+    'action' => '/blog/category/create',
+    'options' => [
+        'data-pjax' => 'true'
+    ]
+]); ?>
 
 <?= $form->field($model, 'slug'); ?>
 
@@ -18,11 +24,16 @@ use yii\helpers\ArrayHelper;
 
     <?php $translationModel = $model->getTranslation($lang, true); ?>
     <?php $content = $form->field($translationModel, "[{$lang}]title")->label(M::t('admin', "Title") . " {$lang}"); ?>
+
+    <?php $image = $translationModel->image != '' ? Html::img($translationModel->image) : '' ;?>
+    <?php $content .= Html::tag('div', $image, ['id' => 'image']); ?>
+
     <?php $content .= $form->field($translationModel, "[{$lang}]image")
         ->label(M::t('admin', 'Image' . " {$lang}"))
         ->widget(\pendalf89\filemanager\widgets\FileInput::className(), [
             'buttonTag' => 'button',
             'buttonName' => 'Browse',
+            'imageContainer' => '#image',
             'buttonOptions' => ['class' => 'btn btn-default'],
             'options' => ['class' => 'form-control'],
         ]); ?>

@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use rgen3\blog\backend\Module as M;
+use yii\bootstrap\Modal;
+use yii\widgets\Pjax;
 ?>
 
 <?php $form = ActiveForm::begin(); ?>
@@ -11,6 +13,7 @@ use rgen3\blog\backend\Module as M;
 
 <?php $categoryList = $categories->parentList; ?>
 
+<?= Html::beginTag('div', ['class' => 'col-sm-8']); ?>
 <?= $form->field($model, 'categories')
     ->widget(\kartik\select2\Select2::class,
         [
@@ -18,10 +21,21 @@ use rgen3\blog\backend\Module as M;
             'options' => [
                 'placeholder' => M::t('admin', 'Select blog categories'),
                 'multiple' => true,
-                'value' => $model->getSelectedCategories()
+                'value' => $model->getSelectedCategories(),
             ],
         ]); ?>
+<?= Html::endTag('div'); ?>
+<?= Html::beginTag('div', ['class' => 'col-sm-4']); ?>
+<?= Html::button(M::t('admin', 'Create category'), [
+    'class' => 'btn btn-success',
+    'data' => [
+        'toggle' => 'modal',
+        'target' => '#pjax-category-add-modal'
+    ]
+]); ?>
 
+<?= Html::endTag('div'); ?>
+<?= Html::tag('div', '', ['class' => 'clearfix']); ?>
 <?php $items = []; ?>
 
 <?php foreach (Yii::$app->params['availableLanguages'] as $lang) : ?>
@@ -82,3 +96,18 @@ use rgen3\blog\backend\Module as M;
     </div>
 
 <?php ActiveForm::end();?>
+
+<?php /** Creates modal for pjax category adding */ ?>
+<?php Modal::begin([
+    'header' => M::t('admin', 'Create category'),
+    'id' => 'pjax-category-add-modal',
+    'toggleButton' => false //['label' => 'click me', 'class' => 'btn btn-success'],
+]);?>
+<?php Pjax::begin([
+    'id' => 'pjax-create-category',
+    'enablePushState' => false,
+    'enableReplaceState' => false,])
+;?>
+<?= $this->render('/category/_form', ['model' => new \rgen3\blog\common\models\BlogCategory(), 'data' => ['pjax' => true]]); ?>
+<?php Pjax::end(); ?>
+<?php Modal::end(); ?>

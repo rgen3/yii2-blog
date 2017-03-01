@@ -7,6 +7,7 @@ use rgen3\blog\common\models\BlogRecord;
 use rgen3\blog\common\models\BlogRecordSearch;
 use rgen3\blog\common\models\BlogRecordTranslation;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 class RecordController extends Controller
 {

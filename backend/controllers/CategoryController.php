@@ -6,6 +6,7 @@ use rgen3\blog\common\models\BlogCategory;
 use rgen3\blog\common\models\BlogCategorySearch;
 use rgen3\blog\common\models\BlogCategoryTranslation;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 class CategoryController extends Controller
 {

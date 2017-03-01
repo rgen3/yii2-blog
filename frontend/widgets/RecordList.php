@@ -27,10 +27,12 @@ class RecordList extends Widget
     {
         $model = new BlogRecordSearch();
         $dataProvider = $model->search([
-            'limit' => $this->limit,
-            'offset' => $this->offset,
-            'category' => $this->prepareCategory(),
-            'orderBy'      => $this->prepareSort()
+            'BlogRecordSearch' => [
+                'limit' => $this->limit,
+                'offset' => $this->offset,
+                'category' => $this->prepareCategory(),
+                'orderBy'      => $this->prepareSort()
+                ]
         ]);
         return $this->render($this->getTemplate(), [
             'dataProvider' => $dataProvider,

@@ -14,19 +14,19 @@ class m170101_113300_initial_blog_migration extends \yii\db\Migration
 
         $this->createTable('{{%blog_record}}', [
             'id' => $this->primaryKey(),
-            'type' => $this->char(20),
-            'slug' => $this->char(255),
+            'type' => $this->string(20),
+            'slug' => $this->string(255),
             'date_created' => $this->timestamp()->defaultValue(new Expression('CURRENT_TIMESTAMP')),
             'date_publish' => $this->dateTime()
         ], $options);
 
         $this->createTable('{{%blog_record_translation}}', [
             'record_id' => $this->integer(),
-            'language_code' => $this->char(10),
+            'language_code' => $this->string(10),
             'title' => $this->text(),
             'preview' => $this->text(),
             'body' => $this->text(),
-            'image' => $this->char(255)
+            'image' => $this->string(255)
         ], $options);
 
         $this->addPrimaryKey('pk-blog_record_translation', '{{%blog_record_translation}}', ['record_id', 'language_code']);
@@ -35,7 +35,7 @@ class m170101_113300_initial_blog_migration extends \yii\db\Migration
         $this->createTable('{{%blog_category}}', [
             'id' => $this->primaryKey(),
             'parent_id' => $this->integer(),
-            'slug' => $this->char(255),
+            'slug' => $this->string(255),
             'date_created' => $this->timestamp()->defaultValue(new Expression('CURRENT_TIMESTAMP'))
         ]);
 
@@ -43,10 +43,10 @@ class m170101_113300_initial_blog_migration extends \yii\db\Migration
 
         $this->createTable('{{%blog_category_translation}}', [
             'category_id' => $this->integer(),
-            'language_code' => $this->char(10),
+            'language_code' => $this->string(10),
             'title' => $this->text(),
             'description' => $this->text(),
-            'image' => $this->char(255)
+            'image' => $this->string(255)
         ]);
 
         $this->addForeignKey('fk-blog_category_translation', '{{%blog_category_translation}}', 'category_id', '{{%blog_category}}', 'id');

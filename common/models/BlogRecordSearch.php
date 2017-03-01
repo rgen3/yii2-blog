@@ -14,7 +14,8 @@ class BlogRecordSearch extends BlogRecord
     public function rules()
     {
         return [
-            [['limit', 'page', 'category'], 'integer'],
+            [['limit', 'page'], 'integer'],
+            [['category'], 'each', 'rule' => ['integer']],
             [['orderBy'], 'safe']
         ];
     }

@@ -64,6 +64,11 @@ class BlogRecordSearch extends BlogRecord
         ]);
 
 
+        if (!empty($params['category']))
+        {
+            $query->join(' join ', BlogRecordToCategory::tableName(), 'id=record_id')
+                ->onCondition(['category_id' => $params['category']]);
+        }
 
         return $dataProvider;
     }

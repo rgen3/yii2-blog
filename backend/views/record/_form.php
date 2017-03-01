@@ -5,6 +5,9 @@ use yii\bootstrap\ActiveForm;
 use rgen3\blog\backend\Module as M;
 use yii\bootstrap\Modal;
 use yii\widgets\Pjax;
+
+$pjaxInputContainerId = 'pjax-category-input';
+
 ?>
 
 <?php $form = ActiveForm::begin(); ?>
@@ -13,28 +16,36 @@ use yii\widgets\Pjax;
 
 <?php $categoryList = $categories->parentList; ?>
 
+<?php Pjax::begin([
+        'id' => $pjaxInputContainerId,
+        'enablePushState' => false,
+        'enableReplaceState' => false
+    ]); ?>
+
 <?= Html::beginTag('div', ['class' => 'col-sm-8']); ?>
-<?= $form->field($model, 'categories')
-    ->widget(\kartik\select2\Select2::class,
-        [
-            'data' => $categoryList,
-            'options' => [
-                'placeholder' => M::t('admin', 'Select blog categories'),
-                'multiple' => true,
-                'value' => $model->getSelectedCategories(),
-            ],
-        ]); ?>
+    <?= $form->field($model, 'categories')
+        ->widget(\kartik\select2\Select2::class,
+            [
+                'data' => $categoryList,
+                'options' => [
+                    'placeholder' => M::t('admin', 'Select blog categories'),
+                    'multiple' => true,
+                    'value' => $model->getSelectedCategories(),
+                ],
+            ]); ?>
 <?= Html::endTag('div'); ?>
 <?= Html::beginTag('div', ['class' => 'col-sm-4']); ?>
-<?= Html::button(M::t('admin', 'Create category'), [
-    'class' => 'btn btn-success',
-    'data' => [
-        'toggle' => 'modal',
-        'target' => '#pjax-category-add-modal'
-    ]
-]); ?>
-
+    <?= Html::button(M::t('admin', 'Create category'), [
+        'class' => 'btn btn-success',
+        'data' => [
+            'toggle' => 'modal',
+            'target' => '#pjax-category-add-modal'
+        ]
+    ]); ?>
 <?= Html::endTag('div'); ?>
+<?php Pjax::end(); ?>
+
+
 <?= Html::tag('div', '', ['class' => 'clearfix']); ?>
 <?php $items = []; ?>
 
@@ -98,16 +109,4 @@ use yii\widgets\Pjax;
 <?php ActiveForm::end();?>
 
 <?php /** Creates modal for pjax category adding */ ?>
-<?php Modal::begin([
-    'header' => M::t('admin', 'Create category'),
-    'id' => 'pjax-category-add-modal',
-    'toggleButton' => false //['label' => 'click me', 'class' => 'btn btn-success'],
-]);?>
-<?php Pjax::begin([
-    'id' => 'pjax-create-category',
-    'enablePushState' => false,
-    'enableReplaceState' => false,])
-;?>
-<?= $this->render('/category/_form', ['model' => new \rgen3\blog\common\models\BlogCategory(), 'data' => ['pjax' => true]]); ?>
-<?php Pjax::end(); ?>
-<?php Modal::end(); ?>
+<?php $this->render('_form_modal', ['modalId' => 'pjax-category-add-modal', 'pjaxInputContainerId' => $pjaxInputContainerId]); ?>

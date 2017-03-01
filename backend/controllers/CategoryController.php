@@ -37,6 +37,13 @@ class CategoryController extends Controller
 
             $model->save();
 
+            if (\Yii::$app->request->isAjax)
+            {
+                return $this->renderAjax('view', [
+                    'model' => $model
+                ]);
+            }
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

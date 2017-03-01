@@ -166,7 +166,7 @@ class BlogCategory extends \yii\db\ActiveRecord
         return $result;
     }
 
-    private function recursiveTitleConstructor($model)
+    private function recursiveTitleConstructor(self $model)
     {
         $title = '';
 
@@ -176,6 +176,6 @@ class BlogCategory extends \yii\db\ActiveRecord
             $title = sprintf("%s (%s) -> ", $title, $model->parent->slug);
         }
 
-        return sprintf("%s %s", $title, $model->getTranslation()->title);
+        return sprintf("%s %s", $title, $model->getTranslation(null)->title);
     }
 }

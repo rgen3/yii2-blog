@@ -52,6 +52,11 @@ class RecordController extends Controller
     {
         $model = BlogRecord::findOne(['id' => $id]);
 
+        if (!$model)
+        {
+            throw new NotFoundHttpException(\Yii::t('app', 'Blog category not found'));
+        }
+
         return $this->render('view', [
             'model' => $model
         ]);
@@ -60,6 +65,11 @@ class RecordController extends Controller
     public function actionUpdate($id)
     {
         $model = BlogRecord::findOne(['id' => $id]);
+
+        if (!$model)
+        {
+            throw new NotFoundHttpException(\Yii::t('app', 'Blog category not found'));
+        }
 
         $postData = \Yii::$app->request->post();
 

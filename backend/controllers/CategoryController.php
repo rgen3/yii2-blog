@@ -56,6 +56,11 @@ class CategoryController extends Controller
     {
         $model = BlogCategory::findOne(['id' => $id]);
 
+        if (!$model)
+        {
+            throw new NotFoundHttpException(\Yii::t('app', 'Blog category not found'));
+        }
+
         $postData = \Yii::$app->request->post();
 
         if ($model->load($postData))
@@ -81,6 +86,11 @@ class CategoryController extends Controller
     public function actionView($id)
     {
         $model = BlogCategory::findOne(['id' => $id]);
+
+        if (!$model)
+        {
+            throw new NotFoundHttpException(\Yii::t('app', 'Blog category not found'));
+        }
 
         return $this->render('view', [
             'model' => $model

@@ -88,7 +88,7 @@ class RecordController extends Controller
     {
         $record = BlogRecord::findOne(['id' => $id]);
 
-        $record &&  $record->remove();
+        $record && $record->remove();
 
         return $this->redirect(['index']);
     }

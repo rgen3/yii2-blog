@@ -6,14 +6,19 @@ use yii\data\ActiveDataProvider;
 
 class BlogRecordSearch extends BlogRecord
 {
-    protected $limit = 10;
-    protected $page = null;
-    /**
-     * 'limit' => $this->limit,
-    'offset' => $this->offset,
-    'category' => $this->prepareCategory(),
-    'sort'
-     */
+    public $limit = 10;
+    public $page = null;
+    public $category = null;
+    public $orderBy = null;
+
+    public function rules()
+    {
+        return [
+            [['limit', 'page', 'category'], 'integer'],
+            [['orderBy'], 'safe']
+        ];
+    }
+
     /**
      * @param array $params
      * (
@@ -28,28 +33,9 @@ class BlogRecordSearch extends BlogRecord
     {
         $query = BlogRecord::find();
 
-        if (isset($params['limit']))
-        {
-            $this->limit = $params['limit'];
-        }
-
-        if (isset($params['page']))
-        {
-            $this->page = $params['page'];
-        }
-
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => [
-                'pageSize' => $this->limit,
-                'page' => $this->page
-            ]
+            'query' => $query
         ]);
-
-        if (isset($params['orderBy']))
-        {
-            $query->orderBy($params['orderBy']);
-        }
 
         $this->load($params);
 
@@ -59,15 +45,24 @@ class BlogRecordSearch extends BlogRecord
             return $dataProvider;
         }
 
+        $dataProvider->pagination = [
+            'pageSize' => $this->limit,
+            'page' => $this->page
+        ];
+
+        if ($this->orderBy)
+        {
+            $query->orderBy($this->orderBy);
+        }
+
         $query->filterWhere([
             'id' => $this->id
         ]);
 
-
-        if (!empty($params['category']))
+        if ($this->category)
         {
             $query->join(' join ', BlogRecordToCategory::tableName(), 'id=record_id')
-                ->onCondition(['category_id' => $params['category']]);
+                ->onCondition(['category_id' => $this->category]);
         }
 
         return $dataProvider;

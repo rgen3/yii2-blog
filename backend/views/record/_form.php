@@ -54,6 +54,23 @@ $pjaxInputContainerId = 'pjax-category-input';
 
     <?php $content = $form->field($translationModel, "[{$lang}]title")->label(M::t('admin', "Title") . " {$lang}"); ?>
 
+    <?php $content .= $form
+        ->field($translationModel, "[{$lang}]tags")
+        ->label(M::t('admin', "Tags") . " {$lang}")
+    ->widget(\yii\jui\AutoComplete::className(), [
+        'clientOptions' => [
+            'source' => new \yii\web\JsExpression("function(request, response) {
+                var term = request.term;
+                term = term.substring(term.lastIndexOf(',') + 1).trim();
+                if (term == '')
+                    return response;
+                $.getJSON('".\yii\helpers\Url::to(['tag/search', 'lang' => $lang])."', {
+                    term: term
+                }, response);
+            }"),
+        ],
+    ]); ?>
+
     <?php $content .= $form->field($translationModel, "[{$lang}]image")
         ->label(M::t('admin', 'Image' . " {$lang}"))
         ->widget(\pendalf89\filemanager\widgets\FileInput::className(), [

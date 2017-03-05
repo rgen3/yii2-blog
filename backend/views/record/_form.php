@@ -68,7 +68,21 @@ $pjaxInputContainerId = 'pjax-category-input';
                     term: term
                 }, response);
             }"),
+            'select' => new \yii\web\JsExpression("function(event, ui){
+                var val = $('#blog-tags').val();
+                val = val.substring(0, val.lastIndexOf(',')).trim();
+                
+                val += (val == '' ? '' : ', ') + ui.item.value;
+                console.log(val);
+                console.log(ui);
+                $('#blog-tags').val(val);
+                return false;
+            }"),
         ],
+        'options' => [
+            'id' => 'blog-tags',
+            'class' => 'form-control'
+        ]
     ]); ?>
 
     <?php $content .= $form->field($translationModel, "[{$lang}]image")

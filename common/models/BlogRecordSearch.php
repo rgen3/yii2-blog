@@ -15,7 +15,7 @@ class BlogRecordSearch extends BlogRecord
     {
         return [
             [['limit', 'page'], 'integer'],
-            [['category'], 'each', 'rule' => ['integer']],
+            [['category'], 'each', 'rule' => ['string']],
             [['orderBy'], 'safe']
         ];
     }
@@ -37,6 +37,7 @@ class BlogRecordSearch extends BlogRecord
         $dataProvider = new ActiveDataProvider([
             'query' => $query
         ]);
+
 
         $this->load($params);
 

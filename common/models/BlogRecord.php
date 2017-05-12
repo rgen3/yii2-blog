@@ -70,6 +70,7 @@ class BlogRecord extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['id'], 'integer'],
             [['date_created', 'date_publish'], 'safe'],
             [['type'], 'string', 'max' => 20],
             [['slug'], 'string', 'max' => 255],
@@ -116,17 +117,24 @@ class BlogRecord extends \yii\db\ActiveRecord
         return $this->hasMany(BlogRecordToCategory::className(), ['record_id' => 'id']);
     }
 
+    public function getRecordCategories()
+    {
+        return $this->getCategories();
+    }
+
     public function getCategories()
     {
         return $this->hasMany(
             BlogCategoryTranslation::className(),
-            [ 'record_id' => 'id']
-        )->viaTable(BlogRecordToCategory::tableName(), ['category_id' => 'id'])->where(['like', 'language_code', Yii::$app->language]);
+            [ 'category_id' => 'category_id' ]
+        )
+            ->viaTable(BlogRecordToCategory::tableName(), ['record_id' => 'id'])
+            ->where(['like', 'language_code', Yii::$app->language]);
     }
 
     public function getSelectedCategories()
     {
-        $where = $this->id ? ['record_id' => $this->id] : [];
+        $where = $this->id ? ['record_id' => $this->id ] : [];
         return ArrayHelper::map(BlogRecordToCategory::findAll($where), 'category_id', 'category_id');
     }
 

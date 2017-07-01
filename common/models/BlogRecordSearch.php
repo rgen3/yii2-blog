@@ -15,7 +15,7 @@ class BlogRecordSearch extends BlogRecord
     {
         return [
             [['limit', 'page'], 'integer'],
-            [['category'], 'each', 'rule' => ['string']],
+            [['category'], 'each', 'rule' => ['integer']],
             [['orderBy'], 'safe']
         ];
     }
@@ -39,7 +39,7 @@ class BlogRecordSearch extends BlogRecord
         ]);
 
 
-        $this->load($params);
+        $this->load($params, '');
 
         if (!$this->validate())
         {
@@ -60,7 +60,7 @@ class BlogRecordSearch extends BlogRecord
         $query->filterWhere([
             'id' => $this->id
         ]);
-
+	
         if ($this->category)
         {
             $query->join(' join ', BlogRecordToCategory::tableName(), 'id=record_id')

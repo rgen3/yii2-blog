@@ -39,7 +39,7 @@ class BlogRecordSearch extends BlogRecord
         ]);
 
 
-        $this->load($params, '');
+        $this->load($params);
 
         if (!$this->validate())
         {

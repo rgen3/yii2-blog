@@ -84,6 +84,14 @@ class CategoryController extends Controller
         ]);
     }
 
+    public function actionDelete($id)
+    {
+        $model = BlogCategory::findOne(['id' => $id]);
+	$modelTranslation = BlogCategoryTranslation::deleteAll(['category_id' => $id]);
+	$model && $model->delete();
+	return $this->redirect(['index']);
+    }
+
     public function actionView($id)
     {
         $model = BlogCategory::findOne(['id' => $id]);

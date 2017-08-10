@@ -64,4 +64,9 @@ class BlogRecordTranslation extends \yii\db\ActiveRecord
         return $this->hasOne(BlogRecord::className(), ['id' => 'record_id']);
     }
 
+    public function getTags()
+    {
+        return $this->hasMany(BlogTag::className(), ['id' => 'record_id']);
+    }
+
 }

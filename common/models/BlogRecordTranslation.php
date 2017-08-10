@@ -34,7 +34,7 @@ class BlogRecordTranslation extends \yii\db\ActiveRecord
         return [
             [['record_id', 'language_code'], 'required'],
             [['record_id'], 'integer'],
-            [['title', 'preview', 'body', 'tags'], 'string'],
+            [['title', 'preview', 'body'], 'string'],
             [['language_code'], 'string', 'max' => 10],
             [['image'], 'string', 'max' => 255],
             [['record_id'], 'exist', 'skipOnError' => true, 'targetClass' => BlogRecord::className(), 'targetAttribute' => ['record_id' => 'id']],

@@ -17,8 +17,21 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => \yii\grid\SerialColumn::class],
-
-            'slug',
+            [
+                'label' => 'Категории',
+                'value' => function ($model) {
+                    $categories = array_map(function($model){
+                        return $model->title;
+                    }, $model->getCategories()->all() ?? []);
+                    return implode(', ', $categories);
+                }
+            ],
+            [
+                'label' => 'Заголовок',
+                'value' => function ($model) {
+                    return $model->translation->title;
+                }
+            ],
             'date_created',
 
             ['class' => \yii\grid\ActionColumn::class]

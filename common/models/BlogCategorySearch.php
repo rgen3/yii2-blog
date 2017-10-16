@@ -14,7 +14,7 @@ class BlogCategorySearch extends BlogCategory
         ]);
 
         $this->load($params);
-
+        
         if (!$this->validate())
         {
             $query->where('1=0');
